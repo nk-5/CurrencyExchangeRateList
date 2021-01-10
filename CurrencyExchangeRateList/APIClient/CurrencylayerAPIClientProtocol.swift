@@ -6,8 +6,9 @@
 //
 
 import Foundation
+import Combine
 
 protocol CurrencylayerAPIClientProtocol {
-    func getCurrencies() -> [Currency]
+    func getCurrencies() -> Future<[Currency], CurrencylayerAPIError>
     func getCurrencyRates(source: String) -> [ExchangeRate]
 }

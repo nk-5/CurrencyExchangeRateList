@@ -6,15 +6,21 @@
 //
 
 import Foundation
+import Combine
 
 struct MockCurrencylayerAPIClient: CurrencylayerAPIClientProtocol {
-    func getCurrencies() -> [Currency] {
-        let jsonString = CurrencylayerResponseData.list
-        guard let currencyList = try? JSONDecoder().decode(CurrencyLayerResponse.List.self, from: jsonString.data(using: .utf8)!) else { return [] }
+    func getCurrencies() -> Future<[Currency], CurrencylayerAPIError> {
+        return Future<[Currency], CurrencylayerAPIError> { promise in
+            let jsonString = CurrencylayerResponseData.list
+            guard let currencyList = try? JSONDecoder().decode(CurrencyLayerResponse.List.self, from: jsonString.data(using: .utf8)!) else {
+                promise(.failure(.decodeError))
+                return
+            }
 
-        return Currency.getCurrencies(from: currencyList)
+            promise(.success(Currency.getCurrencies(from: currencyList)))
+        }
     }
-    
+
     func getCurrencyRates(source: String) -> [ExchangeRate] {
         let jsonString = CurrencylayerResponseData.live
         guard let liveExchangeRate = try? JSONDecoder().decode(CurrencyLayerResponse.Live.self, from: jsonString.data(using: .utf8)!) else { return [] }

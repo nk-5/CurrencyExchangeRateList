@@ -13,20 +13,25 @@ class MainViewModel: ObservableObject {
     @Published var currencies: [Currency] = []
     @Published var exchangeRates: [ExchangeRate] = []
 
+    // TODO: mock to prod
     private let currencyAPIClient: CurrencylayerAPIClientProtocol = MockCurrencylayerAPIClient()
 
     private var cancellableSet: Set<AnyCancellable> = []
 
     init() {
-        currencies = currencyAPIClient.getCurrencies()
+        currencyAPIClient.getCurrencies()
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .failure(let error):
+                    // TODO: error handling
+                break
+                case .finished: break
+                }
+            }, receiveValue: {
+                self.currencies = $0
+            })
+            .store(in: &cancellableSet)
+        
         exchangeRates = currencyAPIClient.getCurrencyRates(source: "USD")
-//        $name
-//            .debounce(for: 0.8, scheduler: RunLoop.main)
-//            .removeDuplicates()
-//            .map { input in
-//                return input.count > 2
-//            }
-//            .assign(to: \.isValid, on: self)
-//            .store(in: &cancellableSet)
     }
 }

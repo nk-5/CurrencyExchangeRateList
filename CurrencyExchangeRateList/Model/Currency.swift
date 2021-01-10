@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Currency: Identifiable, Hashable, Equatable {
+struct Currency: Identifiable, Hashable, Equatable, Decodable {
     let name: String
     var fullName: String = ""
     
