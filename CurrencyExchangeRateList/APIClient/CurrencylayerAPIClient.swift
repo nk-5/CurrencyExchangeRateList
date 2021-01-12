@@ -16,15 +16,29 @@ enum CurrencylayerAPIError: Error {
 // refs: https://currencylayer.com/documentation
 class CurrencylayerAPIClient: CurrencylayerAPIClientProtocol {
     private let endpoint = "http://api.currencylayer.com/"
-    private let accessKey = "hoge"
-    private let baseParam: [String: String]
+    private var accessKey: String?
+    private lazy var baseParam: [String: String] = {
+        ["access_key": accessKey!]
+    }()
     
     private var cancellableSet: Set<AnyCancellable> = []
     
-    init() {
-        self.baseParam = [
-            "access_key": accessKey
-        ]
+    init(accessKey: String? = nil) {
+        if let accessKey = accessKey {
+            self.accessKey = accessKey
+            return
+        }
+        
+        guard let path = Bundle.main.path(forResource: "CurrencyLayerConfig", ofType: "txt") else {
+            precondition(false, "CurrencyLayerConfig file not found and need access key. try make CURRENCY_LAYER_ACCESS_KEY=[access_key]")
+        }
+        
+        do {
+            let tmpAccessKey  = try String(contentsOfFile: path, encoding: .utf8)
+            self.accessKey = tmpAccessKey.components(separatedBy: "\n")[0]
+        } catch {
+            precondition(false, "\(error)")
+        }
     }
     
     func getCurrencies() -> Future<[Currency], CurrencylayerAPIError> {
@@ -37,12 +51,11 @@ class CurrencylayerAPIClient: CurrencylayerAPIClientProtocol {
                             case .finished: break
                             }
                         }, receiveValue: {
-                            guard let data = $0, let currencies = try? JSONDecoder().decode([Currency].self,
-                                                                          from: JSONSerialization.data(withJSONObject: data)) else {
+                            guard let data = $0, let currencyList = try? JSONDecoder().decode(CurrencyLayerResponse.List.self, from: data) else {
                                 promise(.failure(.decodeError))
                                 return
                             }
-                            promise(.success(currencies))
+                            promise(.success(Currency.getCurrencies(from: currencyList)))
                             
                         })
                 .store(in: &self.cancellableSet)

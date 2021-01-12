@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4703E97325ADC3EB001AB977 /* CurrencyLayerConfig.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4703E97225ADC3EB001AB977 /* CurrencyLayerConfig.txt */; };
 		4758156025AA945A00F8E3C4 /* Currency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4758155F25AA945A00F8E3C4 /* Currency.swift */; };
 		4758156825AA948100F8E3C4 /* ExchangeRate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4758156725AA948100F8E3C4 /* ExchangeRate.swift */; };
 		4758156E25AA94B700F8E3C4 /* UIApplicationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4758156D25AA94B700F8E3C4 /* UIApplicationExtension.swift */; };
@@ -46,6 +47,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4703E97225ADC3EB001AB977 /* CurrencyLayerConfig.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CurrencyLayerConfig.txt; sourceTree = SOURCE_ROOT; };
 		4758155F25AA945A00F8E3C4 /* Currency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Currency.swift; sourceTree = "<group>"; };
 		4758156725AA948100F8E3C4 /* ExchangeRate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExchangeRate.swift; sourceTree = "<group>"; };
 		4758156D25AA94B700F8E3C4 /* UIApplicationExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIApplicationExtension.swift; sourceTree = "<group>"; };
@@ -98,6 +100,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4703E97125ADC3DE001AB977 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				4703E97225ADC3EB001AB977 /* CurrencyLayerConfig.txt */,
+			);
+			path = Config;
+			sourceTree = "<group>";
+		};
 		4758155E25AA944800F8E3C4 /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -191,6 +201,7 @@
 		47E8896D25AA88100052C7B1 /* CurrencyExchangeRateList */ = {
 			isa = PBXGroup;
 			children = (
+				4703E97125ADC3DE001AB977 /* Config */,
 				4758159025AACEE900F8E3C4 /* Mock */,
 				4758158725AACC4700F8E3C4 /* APIClient */,
 				4758155E25AA944800F8E3C4 /* Model */,
@@ -343,6 +354,7 @@
 			files = (
 				47E8897625AA88110052C7B1 /* Preview Assets.xcassets in Resources */,
 				47E8897325AA88110052C7B1 /* Assets.xcassets in Resources */,
+				4703E97325ADC3EB001AB977 /* CurrencyLayerConfig.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

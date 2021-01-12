@@ -13,12 +13,13 @@ class MainViewModel: ObservableObject {
     @Published var currencies: [Currency] = []
     @Published var exchangeRates: [ExchangeRate] = []
 
-    // TODO: mock to prod
-    private let currencyAPIClient: CurrencylayerAPIClientProtocol = MockCurrencylayerAPIClient()
+    private let currencyAPIClient: CurrencylayerAPIClientProtocol
 
     private var cancellableSet: Set<AnyCancellable> = []
 
-    init() {
+    init(currencyAPIClient: CurrencylayerAPIClientProtocol = CurrencylayerAPIClient()) {
+        self.currencyAPIClient = currencyAPIClient
+        
         currencyAPIClient.getCurrencies()
             .sink(receiveCompletion: { completion in
                 switch completion {

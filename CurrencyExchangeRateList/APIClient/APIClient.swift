@@ -19,7 +19,8 @@ class APIClient {
             AF.request(url,
                        method: method,
                        parameters: param,
-                       encoder: JSONParameterEncoder.default).response { response in
+                       encoder: URLEncodedFormParameterEncoder.default).response { response in
+//                       encoder: JSONParameterEncoder.default).response { response in
                         debugPrint(response)
                         
                         if let error = response.error {
