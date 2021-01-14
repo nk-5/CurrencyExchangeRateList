@@ -6,8 +6,9 @@
 * Currencylayer Access Key
   * https://currencylayer.com/documentation
 
-## Installation
+## Setup
 
 ```
 $ make CURRENCY_LAYER_ACCESS_KEY=set-access-token
+$ xed .
 ```
