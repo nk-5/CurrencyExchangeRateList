@@ -6,6 +6,7 @@
 //
 
 import Combine
+import Foundation
 
 class MainViewModel: ObservableObject {
     @Published var currencyAmount: String = "100"
@@ -34,5 +35,16 @@ class MainViewModel: ObservableObject {
             .store(in: &cancellableSet)
         
         exchangeRates = currencyAPIClient.getCurrencyRates(source: "USD")
+       
+        $selectedCurrency
+            .debounce(for: 0.8, scheduler: RunLoop.main)
+            .dropFirst()
+            .removeDuplicates()
+            .map { input -> [ExchangeRate] in
+                currencyAPIClient.getCurrencyRates(source: input.name)
+            }
+            .receive(on: DispatchQueue.main)
+            .assign(to: \.exchangeRates, on: self)
+            .store(in: &cancellableSet)
     }
 }

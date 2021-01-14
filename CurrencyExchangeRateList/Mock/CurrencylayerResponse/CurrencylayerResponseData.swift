@@ -33,7 +33,7 @@ struct CurrencylayerResponseData {
             "success": true,
             "terms": "https://currencylayer.com/terms",
             "privacy": "https://currencylayer.com/privacy",
-            "timestamp": 1432400348,
+            "timestamp": 1610574874,
             "source": "USD",
             "quotes": {
                 "USDAUD": 1.278342,

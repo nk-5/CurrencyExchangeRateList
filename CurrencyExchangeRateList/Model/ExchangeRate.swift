@@ -13,12 +13,16 @@ struct ExchangeRate: Hashable, Equatable {
     let rate: Double
     
     static func getExchangeRates(from liveExchangeRate: CurrencyLayerResponse.Live) -> [ExchangeRate] {
-        return liveExchangeRate.quotes.map { key, value in
+        let exchangeRates: [ExchangeRate] = liveExchangeRate.quotes.map { key, value in
             let target = key.replacingOccurrences(of: liveExchangeRate.source, with: "")
             return ExchangeRate(source: liveExchangeRate.source,
                          target: target,
                          rate: value)
         }
+
+        return exchangeRates.sorted(by: {
+            $0.target < $1.target
+        })
     }
 }
 

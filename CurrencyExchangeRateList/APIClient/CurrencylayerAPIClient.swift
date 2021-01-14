@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import UIKit
 
 enum CurrencylayerAPIError: Error {
     case getFailed
@@ -64,10 +65,43 @@ class CurrencylayerAPIClient: CurrencylayerAPIClientProtocol {
     }
     
     func getCurrencyRates(source: String) -> [ExchangeRate] {
-        let jsonString = CurrencylayerResponseData.live
-        guard let liveExchangeRate = try? JSONDecoder().decode(CurrencyLayerResponse.Live.self, from: jsonString.data(using: .utf8)!) else { return [] }
+        // TODO: use mock to prod api
+     
+        var param = baseParam
+        param["source"] = source
+        
+        // use local save rates if get the rate and it's within 30 minutes
+        if let cachedCurrencyRateTimeStamp = UserDefaults.standard.currencyRateTimeStamp,
+           let cachedSource = UserDefaults.standard.targetCurrencyRateSource, cachedSource == source,
+           let cachedCurrencyRates = UserDefaults.standard.currencyRates,
+           cachedCurrencyRateTimeStamp.minutesBetweenNow() <= 30 {
+            let liveExchangeRate = CurrencyLayerResponse.Live(success: true,
+                                                              timestamp: cachedCurrencyRateTimeStamp,
+                                                              source: cachedSource,
+                                                              quotes: cachedCurrencyRates)
+            return ExchangeRate.getExchangeRates(from: liveExchangeRate)
+        }
 
+        let jsonString = CurrencylayerResponseData.live
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .secondsSince1970
+        
+        guard let liveExchangeRate = try? decoder.decode(CurrencyLayerResponse.Live.self, from: jsonString.data(using: .utf8)!) else { return [] }
+
+        UserDefaults.standard.setCurrencyRateTimeStamp(timestamp: liveExchangeRate.timestamp)
+        UserDefaults.standard.setTargetCurrencyRateSource(source: source)
+        UserDefaults.standard.setCurrencyRates(currencyRates: liveExchangeRate.quotes)
         return ExchangeRate.getExchangeRates(from: liveExchangeRate)
+    }
+    
+}
+
+extension Date {
+    func minutesBetweenNow() -> CGFloat {
+        let nowDateMinutes = Date().timeIntervalSinceReferenceDate/60
+        let dateMinutes = timeIntervalSinceReferenceDate/60
+
+        return CGFloat(nowDateMinutes - dateMinutes)
     }
     
 }

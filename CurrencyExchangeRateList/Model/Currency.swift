@@ -14,9 +14,13 @@ struct Currency: Identifiable, Hashable, Equatable, Decodable {
     var id: String { name }
     
     static func getCurrencies(from currencyList: CurrencyLayerResponse.List) -> [Currency] {
-        return currencyList.currencies.map { key, value in
+        let currencies = currencyList.currencies.map { key, value in
            Currency(name: key, fullName: value)
         }
+        
+        return currencies.sorted(by: {
+            $0.name < $1.name
+        })
     }
 }
 

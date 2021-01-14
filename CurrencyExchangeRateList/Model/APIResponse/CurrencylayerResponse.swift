@@ -7,6 +7,8 @@
 
 import Foundation
 
+typealias CurrencyRates = [String: Double]
+
 struct CurrencyLayerResponse {
     struct List: Decodable {
         let success: Bool
@@ -19,6 +21,6 @@ struct CurrencyLayerResponse {
         let success: Bool
         let timestamp: Date
         let source: String
-        let quotes: [String: Double]
+        let quotes: CurrencyRates
     }
 }

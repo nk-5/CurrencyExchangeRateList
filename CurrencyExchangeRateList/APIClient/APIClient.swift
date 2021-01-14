@@ -20,7 +20,6 @@ class APIClient {
                        method: method,
                        parameters: param,
                        encoder: URLEncodedFormParameterEncoder.default).response { response in
-//                       encoder: JSONParameterEncoder.default).response { response in
                         debugPrint(response)
                         
                         if let error = response.error {

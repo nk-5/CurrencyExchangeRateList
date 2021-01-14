@@ -23,7 +23,10 @@ struct MockCurrencylayerAPIClient: CurrencylayerAPIClientProtocol {
 
     func getCurrencyRates(source: String) -> [ExchangeRate] {
         let jsonString = CurrencylayerResponseData.live
-        guard let liveExchangeRate = try? JSONDecoder().decode(CurrencyLayerResponse.Live.self, from: jsonString.data(using: .utf8)!) else { return [] }
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .secondsSince1970
+        
+        guard let liveExchangeRate = try? decoder.decode(CurrencyLayerResponse.Live.self, from: jsonString.data(using: .utf8)!) else { return [] }
 
         return ExchangeRate.getExchangeRates(from: liveExchangeRate)
     }

@@ -23,26 +23,33 @@ struct ContentView: View {
         self.vm = vm
     }
     
+    private var amount: Double {
+         Double(vm.currencyAmount) ?? 0
+    }
+    
     var body: some View {
         VStack(alignment: .trailing) {
-            TextField("placeholder", text: self.$vm.currencyAmount, onCommit:  {
-                UIApplication.shared.endEditing()
-            })
-            .keyboardType(.decimalPad)
-            .multilineTextAlignment(.trailing)
-            .padding()
+            HStack {
+                TextField("100", text: self.$vm.currencyAmount, onCommit:  {
+                    UIApplication.shared.endEditing()
+                })
+                .background(Color(.systemGray5))
+                .keyboardType(.decimalPad)
+                .multilineTextAlignment(.trailing)
+                .padding()
 
-            Menu {
-                ForEach(vm.currencies) { currency in
-                    Button(action: {
-                        vm.selectedCurrency = currency
-                    }) {
-                        Label(currency.name, systemImage: currency.name == vm.selectedCurrency.name ? "checkmark" : "")
+                Menu {
+                    ForEach(vm.currencies) { currency in
+                        Button(action: {
+                            vm.selectedCurrency = currency
+                        }) {
+                            Label(currency.name, systemImage: currency.name == vm.selectedCurrency.name ? "checkmark" : "")
+                        }
                     }
+                } label: {
+                    Text(vm.selectedCurrency.name)
+                    Image(systemName: "chevron.down")
                 }
-            } label: {
-                Text(vm.selectedCurrency.name)
-                Image(systemName: "chevron.down")
             }
             .padding()
             
@@ -51,7 +58,9 @@ struct ContentView: View {
                     ForEach(vm.exchangeRates, id: \.self) { item in
                         VStack {
                             Text(item.target)
-                            Text("\(item.rate)")
+                            Spacer()
+                            Text("Rate :\(item.rate)")
+                            Text("Amount \(Int(amount * item.rate))")
                         }
                     }
                 }
